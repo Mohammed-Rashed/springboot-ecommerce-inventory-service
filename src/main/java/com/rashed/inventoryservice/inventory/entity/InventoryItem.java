@@ -1,4 +1,4 @@
-package com.rashed.inventoryservice.entity;
+package com.rashed.inventoryservice.inventory.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

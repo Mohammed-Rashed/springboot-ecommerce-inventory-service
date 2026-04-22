@@ -1,6 +1,6 @@
-package com.rashed.inventoryservice.repository;
+package com.rashed.inventoryservice.inventory.repository;
 
-import com.rashed.inventoryservice.entity.InventoryItem;
+import com.rashed.inventoryservice.inventory.entity.InventoryItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
