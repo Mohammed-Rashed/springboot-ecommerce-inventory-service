@@ -33,4 +33,18 @@ public class InventoryController {
     public CheckAvailabilityResponse checkAvailability(@Valid @RequestBody CheckAvailabilityRequest request) {
         return inventoryService.checkAvailability(request);
     }
+    @PostMapping("/reserve")
+    public StockOperationResponse reserve(@Valid @RequestBody ReserveStockRequest request) {
+        return inventoryService.reserve(request);
+    }
+
+    @PostMapping("/release")
+    public StockOperationResponse release(@Valid @RequestBody ReleaseStockRequest request) {
+        return inventoryService.release(request);
+    }
+
+    @PostMapping("/deduct")
+    public StockOperationResponse deduct(@Valid @RequestBody DeductStockRequest request) {
+        return inventoryService.deduct(request);
+    }
 }
