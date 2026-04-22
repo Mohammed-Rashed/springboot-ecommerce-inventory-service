@@ -45,11 +45,11 @@ public class InventoryService {
         InventoryItem item = inventoryRepository.findByProductId(productId)
                 .orElseThrow(() -> new NotFoundException("Inventory not found for productId: " + productId));
 
-        if (inventoryRepository.existsBySkuAndProductIdNot(request.sku(), productId)) {
-            throw new ConflictException("Inventory already exists for sku: " + request.sku());
-        }
+//        if (inventoryRepository.existsBySkuAndProductIdNot(request.sku(), productId)) {
+//            throw new ConflictException("Inventory already exists for sku: " + request.sku());
+//        }
 
-        item.setSku(request.sku());
+//        item.setSku(request.sku());
         item.setAvailableQuantity(request.availableQuantity());
 
         InventoryItem updatedItem = inventoryRepository.save(item);
