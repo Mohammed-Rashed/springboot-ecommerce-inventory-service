@@ -3,7 +3,7 @@ CREATE TABLE inventory_items (
                                  product_id BIGINT NOT NULL,
                                  sku VARCHAR(100) NOT NULL,
                                  available_quantity INT NOT NULL DEFAULT 0,
-                                 reserved_quantity INT NOT NULL DEFAULT 0,
+                                   INT NOT NULL DEFAULT 0,
                                  updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
 
                                  CONSTRAINT uk_inventory_product_id UNIQUE (product_id),
