@@ -22,6 +22,33 @@ spring:
     enabled: true
     baseline-on-migrate: true
 
+  kafka:
+    bootstrap-servers: localhost:9092
+
+    consumer:
+      group-id: inventory-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.rashed.inventoryservice.inventory.event"
+        spring.json.value.default.type: "com.rashed.inventoryservice.inventory.event.OrderCreatedEvent"
+
+    producer:
+      acks: all
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+
 logging:
   level:
     org.hibernate.SQL: debug
+
+
+app:
+  kafka:
+    topics:
+      order-created: order-created
+      stock-reserved: stock-reserved
+      stock-rejected: stock-rejected
