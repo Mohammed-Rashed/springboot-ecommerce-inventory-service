@@ -31,8 +31,8 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.json.trusted.packages: "com.rashed.inventoryservice.inventory.event"
-        spring.json.value.default.type: "com.rashed.inventoryservice.inventory.event.OrderCreatedEvent"
+        spring.json.trusted.packages: "com.rashed.inventoryservice.inventory.events"
+        spring.json.value.default.type: "com.rashed.inventoryservice.inventory.events.OrderCreatedEvent"
 
     producer:
       acks: all

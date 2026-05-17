@@ -4,13 +4,20 @@ package com.rashed.inventoryservice.inventory.consumer;
 import com.rashed.inventoryservice.inventory.events.OrderCreatedEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 public class OrderCreatedConsumer {
+
     @KafkaListener(topics = "${app.kafka.topics.order-created}")
-    public void consumeOrderCreated(OrderCreatedEvent event) {
+    public void consumeOrderCreated(@Payload(required = false) OrderCreatedEvent event) {
+        if (event == null) {
+            log.warn("Received empty order-created event payload");
+            return;
+        }
+
         log.info(
                 "Received order-created event. orderId={}, customerId={}, itemsCount={}",
                 event.orderId(),
