@@ -1,9 +1,12 @@
 package com.rashed.inventoryservice.inventory.consumer;
 
 
+import com.rashed.inventoryservice.common.exception.InsufficientStockException;
 import com.rashed.inventoryservice.inventory.events.OrderCreatedEvent;
+import com.rashed.inventoryservice.inventory.events.StockRejectedEvent;
 import com.rashed.inventoryservice.inventory.events.StockReservedEvent;
 import com.rashed.inventoryservice.inventory.service.InventoryEventPublisher;
+import com.rashed.inventoryservice.inventory.service.InventoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Component;
 public class OrderCreatedConsumer {
 
     private final InventoryEventPublisher inventoryEventPublisher;
+    private final InventoryService inventoryService;
 
     @KafkaListener(topics = "${app.kafka.topics.order-created}")
     public void consumeOrderCreated(@Payload(required = false) OrderCreatedEvent event) {
@@ -38,9 +42,30 @@ public class OrderCreatedConsumer {
                         item.quantity()
                 )
         );
-        StockReservedEvent stockReservedEvent = new StockReservedEvent(event.orderId());
 
-        inventoryEventPublisher.publishStockReserved(stockReservedEvent);
+
+        try {
+            inventoryService.reserveStockForOrder(event);
+
+            inventoryEventPublisher.publishStockReserved(
+                    new StockReservedEvent(event.orderId())
+            );
+
+            log.info("Stock reserved successfully for orderId={}", event.orderId());
+
+        } catch (InsufficientStockException exception) {
+            inventoryEventPublisher.publishStockRejected(
+                    new StockRejectedEvent(event.orderId(), exception.getMessage())
+            );
+
+            log.warn(
+                    "Stock rejected for orderId={}, reason={}",
+                    event.orderId(),
+                    exception.getMessage()
+            );
+        }
+
+
 
     }
 }
