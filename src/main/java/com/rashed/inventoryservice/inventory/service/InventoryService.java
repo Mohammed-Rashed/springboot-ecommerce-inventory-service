@@ -1,7 +1,10 @@
 package com.rashed.inventoryservice.inventory.service;
 
 
+import com.rashed.inventoryservice.common.exception.InsufficientStockException;
 import com.rashed.inventoryservice.inventory.dto.*;
+import com.rashed.inventoryservice.inventory.events.OrderCreatedEvent;
+import com.rashed.inventoryservice.inventory.events.OrderCreatedItemEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.rashed.inventoryservice.common.exception.ConflictException;
@@ -148,6 +151,23 @@ public class InventoryService {
                 message,
                 item.getUpdatedAt()
         );
+    }
+
+
+    @Transactional
+    public void reserveStockForOrder(OrderCreatedEvent event) {
+        for (OrderCreatedItemEvent item : event.items()) {
+            int updatedRows = inventoryRepository.reserveStock(
+                    item.productId(),
+                    item.quantity()
+            );
+
+            if (updatedRows == 0) {
+                throw new InsufficientStockException(
+                        "Insufficient stock for product " + item.productId()
+                );
+            }
+        }
     }
 
 }
